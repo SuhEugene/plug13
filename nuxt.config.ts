@@ -6,5 +6,13 @@ export default defineNuxtConfig({
   shadcn: {
     prefix: '',
     componentDir: './components/ui'
+  },
+  runtimeConfig: {
+    jwtSecret: 'super-secret',
+    discordClientSecret: 'super-secret',
+    public: {
+      discordClientId: '1197984072862007417',
+      origin: 'http://localhost:3000'
+    }
   }
 })
