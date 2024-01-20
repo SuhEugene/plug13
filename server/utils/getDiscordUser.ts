@@ -12,7 +12,7 @@ export default async (event: H3Event<EventHandlerRequest>, tokenGrant: DiscordAc
     console.error(e, (e as any).data);
     throw createError({
       statusCode: 400,
-      statusMessage: "Токен невалиден",
+      message: "Токен невалиден",
       data: (e as any).data
     });
   }

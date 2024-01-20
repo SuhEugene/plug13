@@ -29,3 +29,8 @@ interface DiscordUser {
 interface User {
   id: string
 }
+
+interface ConnectionString {
+  value: string
+  createdAt: string
+}

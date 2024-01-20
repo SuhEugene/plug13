@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 const props = defineProps({
   class: {
     type: String,
-    default: 'max-w-sm',
+    default: '',
   },
 })
 </script>
@@ -13,7 +13,7 @@ const props = defineProps({
   <div
     :class="
       cn(
-        'rounded-lg border bg-card text-card-foreground shadow',
+        'max-w-sm rounded-lg border bg-card text-card-foreground shadow',
         props.class,
       )
     "

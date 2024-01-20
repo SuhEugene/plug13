@@ -6,7 +6,7 @@ export default async (event: H3Event<EventHandlerRequest>): Promise<DiscordAcces
   const body = await readBody<{ code?: string }>(event);
   if (!body.code) throw createError({
     statusCode: 400,
-    statusMessage: "Отсутствует код авторизации"
+    message: "Отсутствует код авторизации"
   });
 
   const discordBody = {
@@ -33,7 +33,7 @@ export default async (event: H3Event<EventHandlerRequest>): Promise<DiscordAcces
     console.error(e, (e as any).data);
     throw createError({
       statusCode: 400,
-      statusMessage: "Не удалось получить токен",
+      message: "Не удалось получить токен",
       data: (e as any).data
     });
   }

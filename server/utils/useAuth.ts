@@ -17,7 +17,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
   const cookies = parseCookies(event);
   if (!cookies.token) throw createError({
     statusCode: 401,
-    statusMessage: "Отсутствует токен"
+    message: "Отсутствует токен"
   });
 
   const jwtSecret = useRuntimeConfig().jwtSecret;
@@ -32,7 +32,7 @@ export default async (event: H3Event<EventHandlerRequest>) => {
   } catch (e) {
     throw createError({
       statusCode: 400,
-      statusMessage: (e as Error)?.message || "Не получается верифицировать токен" 
+      message: (e as Error)?.message || "Не получается верифицировать токен" 
     });
   }
 }

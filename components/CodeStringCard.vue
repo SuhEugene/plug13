@@ -1,18 +1,16 @@
 <script lang="ts" setup>
-import { Check, Copy, Loader2, RefreshCw, Trash } from 'lucide-vue-next';
+import { Check, Copy, RefreshCw, Trash, XCircle } from 'lucide-vue-next';
 
-const code = ref('1234567890');
-const pending = ref(false);
+const {
+  pending, connectionString, error,
+  fetch, generate, destroy,
+} = useConnectionString();
 
-const niceCode = computed(() => `${code.value.slice(0, 5)}-${code.value.slice(5)}`)
-
-function generateCode() {
-  pending.value = true;
-  setTimeout(() => {
-    code.value = '1234567890';
-    pending.value = false;
-  }, 2000)
-}
+const niceCode = computed(() => {
+  const csv = connectionString.value;
+  if (!csv) return '';
+  return `${csv.value.slice(0, 5)}-${csv.value.slice(5)}`
+});
 
 function selectAll(event: MouseEvent) {
   const target = event.target as HTMLInputElement;
@@ -29,22 +27,31 @@ function copyCode() {
   codeCopiedShownTimeout = setTimeout(() => { codeCopiedShown.value = false; }, 3000)
 }
 
+onMounted(() => { fetch(); })
+
 </script>
 
 <template>
   <Card class="relative">
+    <Transition name="fade-then-slide">
+      <Alert v-if="error" variant="danger" class="absolute bottom-full mb-4">
+        <XCircle class="h-4 w-4" />
+        <AlertTitle>Ошибка!</AlertTitle>
+        <AlertDescription>{{ error?.data?.message || error?.message || 'Lorem ipsum' }}</AlertDescription>
+      </Alert>
+    </Transition>
     <CardHeader>
       <CardTitle class="flex flex-row items-center gap-2">Код подключения</CardTitle>
       <CardDescription>Это код, предназначенный для подключения аккаунта игры к этому сайту</CardDescription>
     </CardHeader>
     <CardContent class="flex flex-row gap-2">
-      <template v-if="code">
+      <template v-if="connectionString">
         <Input readonly class="text-center font-mono" :model-value="niceCode" @click="selectAll"  />
         <Button variant="secondary" size="icon" @click="copyCode"><Copy class="w-4 h-4" /></Button>
-        <Button variant="destructive" size="icon" :disabled="removalPending" @click="code = ''"><Trash class="w-4 h-4" /></Button>
+        <Button variant="destructive" size="icon" :disabled="pending" @click="destroy"><Trash class="w-4 h-4" /></Button>
       </template>
-      <Button v-else class="w-full" @click="generateCode" :disabled="creationPending">
-        <RefreshCw class="w-4 h-4 mr-2" :class="{'animate-spin': creationPending}" />
+      <Button v-else class="w-full" @click="generate" :disabled="pending">
+        <RefreshCw class="w-4 h-4 mr-2" :class="{'animate-spin': pending}" />
         <span>Создать новый код</span>
       </Button>
     </CardContent>
