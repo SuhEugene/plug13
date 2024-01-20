@@ -6,8 +6,7 @@ const TEN_HOURS = 10 * 60 * 60 * 1000;
 export default defineEventHandler(async (event) => {
   const user = await useAuth(event);
 
-  const connection = await prisma.connectionString.update({
-    select: { value: true, createdAt: true },
+  await prisma.connectionString.updateMany({
     where: {
       ownerId: user.id,
       createdAt: { gte: new Date(Date.now() - TEN_HOURS) },
@@ -16,5 +15,5 @@ export default defineEventHandler(async (event) => {
     data: { deleted: true }
   });
 
-  return { connection };
+  return;
 })
