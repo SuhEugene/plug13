@@ -59,6 +59,7 @@ export const useAccount = () => {
 
       router.replace({ query: {} });
       userAccount.value = data;
+      isLoggedIn.value = true;
     } catch(e) { console.log("DataError", e); }
   }
 
