@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 const props = defineProps({
   class: {
     type: String,
-    default: '',
+    default: 'max-w-sm',
   },
 })
 </script>

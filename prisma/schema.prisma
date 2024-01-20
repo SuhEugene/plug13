@@ -1,0 +1,30 @@
+datasource db {
+  url      = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String @unique @db.VarChar(20)
+  tokenVersion Int    @default(0) @map("token_version") @db.SmallInt()
+
+  connectionStrings ConnectionString[]
+
+  @@map("users")
+}
+
+model ConnectionString {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
+  value     String   @unique @db.Char(10)
+  createdAt DateTime @default(dbgenerated("now()")) @map("created_at")
+  ownerId   String   @unique @map("owner_id") @db.VarChar(20)
+  deleted   Boolean  @default(false)
+
+  owner User @relation(fields: [ownerId], references: [id])
+
+  @@map("connection_strings")
+}
