@@ -19,7 +19,7 @@ model User {
 
 model ConnectionString {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid()
-  value     String   @unique @db.Char(10)
+  value     String   @db.Char(10)
   createdAt DateTime @default(dbgenerated("now()")) @map("created_at")
   ownerId   String   @map("owner_id") @db.VarChar(20)
   deleted   Boolean  @default(false)
