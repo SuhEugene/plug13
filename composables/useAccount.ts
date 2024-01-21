@@ -5,8 +5,8 @@ export const useAccount = () => {
   const router = useRouter();
   const { discordClientId, origin } = useRuntimeConfig().public;
 
-  const isLoggedIn = ref(false);
-  const pending = ref(false);
+  const isLoggedIn = useState('account-logged-in', () => false);
+  const pending = useState('account-pending', () => false);
   const userAccount = useState<User | null>('user-account', () => null);
 
   const setPending   = () => { pending.value = true; }
@@ -64,13 +64,23 @@ export const useAccount = () => {
   }
 
   const logOut = async () => {
-    try { await $fetch('/api/auth', { credentials: 'include', method: 'DELETE' }); }
-    catch (e) { console.error(e); }
+    setPending();
+    try {
+      await $fetch('/api/auth', { credentials: 'include', method: 'DELETE' });
+      isLoggedIn.value = false;
+      userAccount.value = null;
+    } catch (e) { console.error(e); }
+    resetPending();
   }
 
   const resetSessions = async () => {
-    try { await $fetch('/api/resetSessions', { credentials: 'include', method: 'POST' }); }
-    catch (e) { console.error(e); }
+    setPending();
+    try {
+      await $fetch('/api/resetSessions', { credentials: 'include', method: 'POST' });
+      isLoggedIn.value = false;
+      userAccount.value = null;
+    } catch (e) { console.error(e); }
+    resetPending();
   }
 
   return {
