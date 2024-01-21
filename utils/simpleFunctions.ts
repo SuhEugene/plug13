@@ -26,5 +26,5 @@ export function randomString(alphabet: RndStrAlphabet, length: number) {
 }
 
 
-export const createError = (e: any) => (e instanceof Error) ? e : Error((e as any)?.message || 'Неизвестная ошибка');
-export const createFetchError = (e: any) => (e instanceof FetchError) ? e : createError(e);
+export const createSimpleError = (e: any) => (e instanceof Error) ? e : Error((e as any)?.message || 'Неизвестная ошибка');
+export const createFetchError = (e: any) => (e instanceof FetchError) ? e : createSimpleError(e);
