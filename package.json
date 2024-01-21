@@ -23,6 +23,7 @@
   "dependencies": {
     "@radix-icons/vue": "^1.0.0",
     "@vueuse/core": "^10.7.2",
+    "buttplug": "^3.2.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
