@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 async function getUser(id: string, tokenVersion: number) {
   const user = await prisma.user.findFirst({
-    select: { id: true },
+    select: { id: true, username: true },
     where: { id, tokenVersion }
   });
   if (!user) throw Error("Токен устарел");

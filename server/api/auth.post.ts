@@ -35,5 +35,5 @@ export default defineEventHandler(async (event) => {
     secure: true
   });
 
-  return { id: user.id };
+  return user;
 })
