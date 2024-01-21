@@ -12,15 +12,23 @@ export default defineEventHandler(async (event) => {
   const jwtSecret = useRuntimeConfig().jwtSecret;
 
   let user = await prisma.user.findFirst({
-    select: { id: true, tokenVersion: true },
+    select: { id: true, username: true },
     where: { id: discordUser.id }
   });
+
   if (!user)
     user = await prisma.user.create({
-      select: { id: true, tokenVersion: true },
-      data: { id: discordUser.id }
+      select: { id: true, username: true },
+      data: { id: discordUser.id, username: discordUser.username }
     });
-  
+
+  if (user.username !== discordUser.username)
+    user = await prisma.user.update({
+      select: { id: true, username: true },
+      data: { username: discordUser.username },
+      where: { id: discordUser.id }
+    });
+
   const token = jwt.sign(user, jwtSecret);
   setCookie(event, 'token', token, {
     sameSite: true,

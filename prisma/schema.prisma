@@ -10,6 +10,7 @@ generator client {
 
 model User {
   id           String @unique @db.VarChar(20)
+  username     String @db.VarChar(32)
   tokenVersion Int    @default(0) @map("token_version") @db.SmallInt()
 
   connectionStrings ConnectionString[]
