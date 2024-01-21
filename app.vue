@@ -38,4 +38,10 @@ body {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
 }
+
+.fade-then-slide-enter-active,
+.fade-then-slide-leave-active
+{ transition: opacity 0.13s ease-in-out, transform 0.13s ease-in-out;}
+.fade-then-slide-enter-from { opacity: 0; transform: translateY(0.5rem); }
+.fade-then-slide-leave-to { opacity: 0; transform: translateY(-0.5rem); }
 </style>
