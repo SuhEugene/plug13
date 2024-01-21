@@ -32,7 +32,7 @@ onMounted(() => { fetch(); })
 </script>
 
 <template>
-  <Card class="relative">
+  <Card class="relative max-w-sm">
     <Transition name="fade-then-slide">
       <Alert v-if="error" variant="danger" class="absolute bottom-full mb-4">
         <XCircle class="h-4 w-4" />

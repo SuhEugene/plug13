@@ -18,7 +18,7 @@ onMounted(async () => {
   <div class="container min-h-screen h-full px-6 flex flex-col justify-center items-center">
     <LoadingCard v-if="pending" />
     <LogInCard v-else-if="!isLoggedIn" />
-    <CodeStringCard v-else />
+    <ManagementPanel v-else />
   </div>
 </template>
 

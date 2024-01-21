@@ -3,7 +3,7 @@ const { openOauth2Page } = useAccount();
 </script>
 
 <template>
-  <Card>
+  <Card class="max-w-sm">
     <CardHeader>
       <CardTitle>Вход в аккаунт</CardTitle>
       <CardDescription>Для продолжения, нужно войти в аккаунт</CardDescription>
