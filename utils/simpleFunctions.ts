@@ -26,7 +26,7 @@ export function randomString(alphabet: RndStrAlphabet, length: number) {
 
   let out = '';
   for (let i = 0; i < length; i++)
-    out += characters[Math.floor(Math.random() * length)];
+    out += characters[Math.floor(Math.random() * characters.length)];
   return out;
 }
 
