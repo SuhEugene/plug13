@@ -47,7 +47,8 @@ onUnmounted(() => disconnect());
           </Button>
         </div>
         <div v-else>
-          <div v-for="device in devices" @click="device.vibrate(1);device.stop()" @dblclick="">{{ device.name }}</div>
+          <!-- <div v-for="device in devices" @click="device.vibrate(1);device.stop()" @dblclick="">{{ device.name }}</div> -->
+          <DeviceTable />
           <Button v-if="!isScanning" class="block mx-auto mt-2" variant="secondary" size="sm" @click="startScanning()">
             <Search class="w-4 h-4 mr-2 inline-block" />
             <span>Сканировать</span>
