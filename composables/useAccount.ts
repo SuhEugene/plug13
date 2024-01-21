@@ -21,7 +21,7 @@ export const useAccount = () => {
     } catch (e) { isLoggedIn.value = false; }
     resetPending();
   }
-  
+
   const openOauth2Page = () => {
     const state = randomString(RndStrAlphabet.useAll, 16);
     sessionStorage.setItem('discordState', state);
@@ -46,25 +46,38 @@ export const useAccount = () => {
     const state = sessionStorage.getItem('discordState');
     if (!state || state !== route.query.state) return;
 
+    setPending();
     try {
       const data = await $fetch('/api/auth', {
         key: 'userdata',
         method: 'POST',
         body: { code }
       });
-      
+
       if (!data.id) return;
 
       router.replace({ query: {} });
       userAccount.value = data;
       isLoggedIn.value = true;
-    } catch(e) { console.log("DataError", e); }
+    } catch(e) { console.error(e); }
+    resetPending();
+  }
+
+  const logOut = async () => {
+    try { await $fetch('/api/auth', { credentials: 'include', method: 'DELETE' }); }
+    catch (e) { console.error(e); }
+  }
+
+  const resetSessions = async () => {
+    try { await $fetch('/api/resetSessions', { credentials: 'include', method: 'POST' }); }
+    catch (e) { console.error(e); }
   }
 
   return {
     userAccount: readonly(userAccount),
     isLoggedIn: readonly(isLoggedIn),
     pending: readonly(pending),
-    openOauth2Page, fetchUser, logIn
+    openOauth2Page, fetchUser,
+    logIn, logOut, resetSessions
   }
 }

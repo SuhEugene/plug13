@@ -1,7 +1,6 @@
 
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
-import getDiscordUser from '../utils/getDiscordUser';
 
 const prisma = new PrismaClient();
 
