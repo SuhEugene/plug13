@@ -6,6 +6,8 @@ const {
   fetch, generate, destroy,
 } = useConnectionString();
 
+const meaninglessCrap = ref<string>();
+
 const niceCode = computed(() => {
   const csv = connectionString.value;
   if (!csv) return '';
@@ -27,7 +29,26 @@ function copyCode() {
   codeCopiedShownTimeout = setTimeout(() => { codeCopiedShown.value = false; }, 3000)
 }
 
-onMounted(() => { fetch(); })
+let meaninglessCrapInterval: ReturnType<typeof setInterval>;
+function generateMeaninglessCrap() {
+  meaninglessCrap.value = `${randomString(RndStrAlphabet.useSymbols, 5)}-${randomString(RndStrAlphabet.useSymbols, 5)}`;
+}
+
+watch(pending, (newValue) => {
+  if (!newValue)
+    return clearInterval(meaninglessCrapInterval);
+
+  if (!connectionString.value) return;
+
+  clearInterval(meaninglessCrapInterval);
+  meaninglessCrapInterval = setInterval(generateMeaninglessCrap, 50);
+})
+
+onMounted(() => { fetch(); });
+
+onUnmounted(() => {
+  clearTimeout(codeCopiedShownTimeout);
+});
 
 </script>
 
@@ -39,11 +60,12 @@ onMounted(() => { fetch(); })
     </CardHeader>
     <CardContent class="flex flex-row gap-2">
       <template v-if="connectionString">
-        <Input readonly class="text-center font-mono" :model-value="niceCode" @click="selectAll"  />
+        <Input v-if="!pending" readonly class="text-center font-mono" :model-value="niceCode" @click="selectAll"  />
+        <Input v-else readonly class="text-center font-mono" :model-value="meaninglessCrap" />
         <TooltipProvider :delay-duration="300" disableClosingTrigger>
           <Tooltip>
             <TooltipTrigger as-child>
-              <Button variant="outline" size="icon" @click="copyCode"><Copy class="w-4 h-4" /></Button>
+              <Button variant="outline" size="icon" :disabled="pending" @click="copyCode"><Copy class="w-4 h-4" /></Button>
             </TooltipTrigger>
             <TooltipContent>Скопировать код</TooltipContent>
           </Tooltip>
