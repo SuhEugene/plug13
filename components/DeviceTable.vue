@@ -1,26 +1,21 @@
 <script lang="ts" setup>
-import { Cable, MoreHorizontal, X } from 'lucide-vue-next';
+import type { ButtplugClientDevice } from 'buttplug';
+import { MoreHorizontal } from 'lucide-vue-next';
 
 const { devices } = useButtplug();
+const { deviceSettings, setDeviceEnabled, toggleActuatorSetting } = useDeviceSettings();
 
-interface Settings {
-  enabled: boolean
-  frontEmotes: boolean
-  backEmotes: boolean
-  faceEmotes: boolean
-}
+const attributeTypes = {
+  'vibrateAttributes': { name: 'Вибрирующий', key: 'vibration' },
+  'oscillateAttributes': { name: 'Колеблющийся', key: 'oscillation' }
+} as const;
 
-const deviceSettings: Record<string, Settings> = {};
+const emoteTypes = {
+  'frontEmotes': 'Пах',
+  'backEmotes': 'Зад',
+  'faceEmotes': 'Лицо'
+} as const;
 
-function loadDeviceSettings() {
-  const settingsString = localStorage.getItem('deviceSettings');
-  if (!settingsString) return;
-  try {
-    const settingsJSON = JSON.parse(settingsString);
-  } catch(e) { console.error(e); }
-}
-
-onMounted(() => loadDeviceSettings())
 </script>
 
 <template>
@@ -34,16 +29,38 @@ onMounted(() => loadDeviceSettings())
     </TableHeader>
     <TableBody>
       <TableRow v-for="device in devices" :key="device.name">
-        <TableCell class="text-center"><Switch /></TableCell>
+        <TableCell class="text-center">
+          <Switch
+            :checked="deviceSettings[device.name]?.enabled ?? false"
+            @update:checked="(value) => setDeviceEnabled(device as ButtplugClientDevice, value)"
+          />
+        </TableCell>
         <TableCell>{{ device.name }}</TableCell>
         <TableCell>
-          <Popover side="left">
-            <PopoverTrigger as-child>
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
               <Button size="icon" variant="ghost"><MoreHorizontal class="w-4 h-4" /></Button>
-            </PopoverTrigger>
-            <PopoverContent>
-            </PopoverContent>
-          </Popover>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Тип привода</DropdownMenuLabel>
+              <DropdownMenuGroup v-for="(actuatorType, attributeType) in attributeTypes">
+                <DropdownMenuSub v-for="actuator in device[attributeType]">
+                  <DropdownMenuSubTrigger>{{actuatorType.name}} {{ actuator.Index+1 }}</DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuLabel>Тип эмоута</DropdownMenuLabel>
+                    <DropdownMenuSeparator></DropdownMenuSeparator>
+                    <DropdownMenuCheckboxItem
+                      v-for="(emoteVal, emoteKey) in emoteTypes"
+                      :checked="deviceSettings[device.name]?.[actuatorType.key]?.[actuator.Index][emoteKey] ?? false"
+                      @select="toggleActuatorSetting(device as ButtplugClientDevice, actuatorType.key, actuator.Index, emoteKey)"
+                    >
+                      {{ emoteVal }}
+                    </DropdownMenuCheckboxItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </TableCell>
       </TableRow>
     </TableBody>
