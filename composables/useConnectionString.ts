@@ -49,7 +49,9 @@ export const useConnectionString = () => {
   }
 
   return {
-    pending, connectionString, error,
+    pending: readonly(pending),
+    connectionString: readonly(connectionString),
+    error: readonly(error),
     fetch, generate, destroy
   }
 }

@@ -64,7 +64,9 @@ export const useAccount = () => {
   }
 
   return {
-    userAccount, isLoggedIn, pending,
+    userAccount: readonly(userAccount),
+    isLoggedIn: readonly(isLoggedIn),
+    pending: readonly(pending),
     openOauth2Page, fetchUser, logIn
   }
 }
