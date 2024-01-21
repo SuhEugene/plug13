@@ -4,12 +4,16 @@ export enum RndStrAlphabet {
   useUpper = 1 << 0,
   useLower = 1 << 1,
   useNumbers = 1 << 2,
-  useAll = (1 << 3) - 1
+  useAlphaNum = (1 << 3) - 1,
+
+  useSymbols = 1 << 3,
+  useAll = (1 << 4) - 1,
 }
 
 const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const lower = 'abcdefghijklmnopqrstuvwxyz';
 const numbers = '0123456789';
+const symbols = '!@#$%^&*()/*+';
 
 export function randomString(alphabet: RndStrAlphabet, length: number) {
   let characters = '';
@@ -18,6 +22,7 @@ export function randomString(alphabet: RndStrAlphabet, length: number) {
   if (alphabet & RndStrAlphabet.useUpper)  characters += upper;
   if (alphabet & RndStrAlphabet.useLower)  characters += lower;
   if (alphabet & RndStrAlphabet.useNumbers) characters += numbers;
+  if (alphabet & RndStrAlphabet.useSymbols) characters += symbols;
 
   let out = '';
   for (let i = 0; i < length; i++)

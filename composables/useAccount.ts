@@ -23,7 +23,7 @@ export const useAccount = () => {
   }
 
   const openOauth2Page = () => {
-    const state = randomString(RndStrAlphabet.useAll, 16);
+    const state = randomString(RndStrAlphabet.useAlphaNum, 16);
     sessionStorage.setItem('discordState', state);
 
     const url = new URL('https://discord.com/api/oauth2/authorize');
