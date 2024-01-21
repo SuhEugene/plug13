@@ -15,12 +15,7 @@ const { userAccount, pending, logOut } = useAccount();
             </TooltipTrigger>
             <TooltipContent>Выход</TooltipContent>
           </Tooltip>
-          <Tooltip>
-            <TooltipTrigger as-child>
-              <ButtonDialogClearSessions />
-            </TooltipTrigger>
-            <TooltipContent>Завершить все сессии</TooltipContent>
-          </Tooltip>
+          <ButtonDialogClearSessions />
         </TooltipProvider>
       </CardTitle>
     </CardHeader>
