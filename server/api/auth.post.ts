@@ -12,19 +12,19 @@ export default defineEventHandler(async (event) => {
   const jwtSecret = useRuntimeConfig().jwtSecret;
 
   let user = await prisma.user.findFirst({
-    select: { id: true, username: true },
+    select: { id: true, username: true, tokenVersion: true },
     where: { id: discordUser.id }
   });
 
   if (!user)
     user = await prisma.user.create({
-      select: { id: true, username: true },
+      select: { id: true, username: true, tokenVersion: true },
       data: { id: discordUser.id, username: discordUser.username }
     });
 
   if (user.username !== discordUser.username)
     user = await prisma.user.update({
-      select: { id: true, username: true },
+      select: { id: true, username: true, tokenVersion: true },
       data: { username: discordUser.username },
       where: { id: discordUser.id }
     });
@@ -35,5 +35,5 @@ export default defineEventHandler(async (event) => {
     secure: true
   });
 
-  return user;
+  return { id: user.id, username: user.username };
 })
