@@ -1,3 +1,5 @@
+import { FetchError } from 'ofetch';
+
 export enum RndStrAlphabet {
   useUpper = 1 << 0,
   useLower = 1 << 1,
@@ -22,3 +24,7 @@ export function randomString(alphabet: RndStrAlphabet, length: number) {
     out += characters[Math.floor(Math.random() * length)];
   return out;
 }
+
+
+export const createError = (e: any) => (e instanceof Error) ? e : Error((e as any)?.message || 'Неизвестная ошибка');
+export const createFetchError = (e: any) => (e instanceof FetchError) ? e : createError(e);

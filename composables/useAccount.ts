@@ -5,23 +5,21 @@ export const useAccount = () => {
   const router = useRouter();
   const { discordClientId, origin } = useRuntimeConfig().public;
 
-  const isLoggedIn = shallowRef(false);
-  // const pending = shallowRef(false);
-  // const userAccount = shallowRef<User | null>(null);
+  const isLoggedIn = ref(false);
+  const pending = ref(false);
+  const userAccount = useState<User | null>('user-account', () => null);
 
-  const { data: userAccount, pending, refresh } = useFetch('/api/account', {
-    key: 'userdata',
-    credentials: 'include',
-    deep: false,
-    immediate: false,
-    onResponse(ctx) {
-      if (ctx.error) { isLoggedIn.value = false; return; }
-      if (ctx.response._data.id) { isLoggedIn.value = true; }
-    }
-  });
-  
+  const setPending   = () => { pending.value = true; }
+  const resetPending = () => { pending.value = false; }
+
   const fetchUser = async () => {
-    await refresh();
+    setPending();
+    try {
+      const user = await $fetch('/api/account', { credentials: 'include' });
+      userAccount.value = user;
+      isLoggedIn.value = true;
+    } catch (e) { isLoggedIn.value = false; }
+    resetPending();
   }
   
   const openOauth2Page = () => {
