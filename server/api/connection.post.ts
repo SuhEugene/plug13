@@ -33,5 +33,8 @@ export default defineEventHandler(async (event) => {
     data: { ownerId: user.id, value: randomString(RndStrAlphabet.useUpper | RndStrAlphabet.useNumbers, 10) }
   });
 
+  if(event.context.appSocket)
+    event.context.appSocket.in(user.id).emit("update-connection");
+
   return { connection: newConnection };
 })

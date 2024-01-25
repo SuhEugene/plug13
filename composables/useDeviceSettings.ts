@@ -1,32 +1,26 @@
 import type { ButtplugClientDevice } from "buttplug"
 
-interface ActuatorSettings {
-  frontEmotes: boolean
-  backEmotes: boolean
-  faceEmotes: boolean
-}
+type ActuatorSettings = { [Property in AllowedEmoteTypes]: boolean};
 
-interface DeviceSettings {
-  enabled: boolean
-  vibration?: ActuatorSettings[]
-  oscillation?: ActuatorSettings[]
+type DeviceSettings = {
+  [Property in AllowedInteractionTypes]: ActuatorSettings[]
 }
+type UsableDeviceSettings = { enabled: boolean } & Partial<DeviceSettings>;
 
-type DeviceSeetingsRecord = Record<string, DeviceSettings>;
+type DeviceSeetingsRecord = Record<string, UsableDeviceSettings>;
 
 export const useDeviceSettings = () => {
   const deviceSettings = useState<DeviceSeetingsRecord>('device-settings', () => ({}));
 
   const sanitizeActuatorArray = (arr: ActuatorSettings[]) => {
     const out = [];
-    for (const actuator of arr)
-      out.push({
-        frontEmotes: actuator.frontEmotes,
-        backEmotes:  actuator.backEmotes,
-        faceEmotes:  actuator.faceEmotes
-      });
-    if (out.length)
-      return out;
+    for (const actuator of arr) {
+      const emoteObj: Partial<ActuatorSettings> = {};
+      for (const emoteType of allowedEmoteTypes)
+        emoteObj[emoteType] = actuator[emoteType];
+      out.push(emoteObj as ActuatorSettings);
+    }
+    if (out.length) return out;
     return false;
   }
 
@@ -60,10 +54,14 @@ export const useDeviceSettings = () => {
     localStorage.setItem('deviceSettings', JSON.stringify(deviceSettings.value));
   }
 
-  const createDeviceActuators = (obj: DeviceSettings, type: 'vibration' | 'oscillation', amount: number) => {
+  const createDeviceActuators = (obj: UsableDeviceSettings, type: AllowedInteractionTypes, amount: number) => {
     const arr: ActuatorSettings[] = [];
-    for (let i = 0; i < amount; i++)
-      arr.push({ frontEmotes: false, backEmotes: false, faceEmotes: false });
+    for (let i = 0; i < amount; i++) {
+      const emoteObj: Partial<ActuatorSettings> = {};
+      for (const emoteType of allowedEmoteTypes)
+        emoteObj[emoteType] = false;
+      arr.push(emoteObj as ActuatorSettings);
+    }
     obj[type] = arr;
   }
 

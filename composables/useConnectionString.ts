@@ -8,7 +8,7 @@ export const useConnectionString = () => {
   const setPending   = () => { pending.value = true; error.value = null; }
   const resetPending = () => { pending.value = false; }
 
-  const fetch = async () => {
+  const directFetch = async () => {
     setPending();
     try {
       const r = await $fetch('/api/connection', { credentials: 'include' });
@@ -16,6 +16,8 @@ export const useConnectionString = () => {
     } catch (e) { error.value = createFetchError(e as any); }
     resetPending();
   }
+
+  const setConnectionString = (data: ConnectionString) => { connectionString.value = data; }
 
   const generate = async () => {
     if (connectionString.value) return;
@@ -40,6 +42,7 @@ export const useConnectionString = () => {
     pending: readonly(pending),
     connectionString: readonly(connectionString),
     error: readonly(error),
-    fetch, generate, destroy
+    setConnectionString,
+    directFetch, generate, destroy
   }
 }

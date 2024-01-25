@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     jwtSecret: 'super-secret',
+    byondSecret: 'very-secret',
     discordClientSecret: 'super-secret',
     public: {
       discordClientId: '1197984072862007417',
