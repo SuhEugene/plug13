@@ -77,7 +77,7 @@
 
 	var/datum/http_response/response = request.into_response()
 
-	if (response.errored || response.status_code != 200)
+	if (response.errored || FLOOR(response.status_code/100) != 2) // 2xx codes
 		if (++emote_sends_failed > 10)
 			error = "Слишком много неудачных запросов"
 			disconnect()
