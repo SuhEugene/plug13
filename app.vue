@@ -1,6 +1,35 @@
 <script setup lang="ts">
+const metadata = {
+  shortTitle: 'Plug13',
+  title: 'Plug13 - SpaceStation13 + Buttplug.io',
+  description: 'Экспериментальная интеграция SpaceStation13 с buttplug.io в веб-приложении! Погрузитесь в увлекательный мир космических приключений намного глубже, позволив buttplug.io передавать приятные эмоции персонажа прямиком через игрушку!',
+  siteName: 'WetSkrell',
+  image: '/favicon.png',
+  url: 'https://plug13.wetskrell.ru',
+  themeColor: '#C93152'
+} as const;
+
 useHead({
-  htmlAttrs: { class: 'dark', lang: 'ru' }
+  htmlAttrs: { class: 'dark', lang: 'ru' },
+  title: 'Plug13',
+  link: [{ type: 'image/png', rel: 'icon', href: '/favicon.png' }],
+  meta: [{ name: 'theme-color', content: metadata.themeColor }]
+});
+
+useSeoMeta({
+  title: metadata.shortTitle,
+  description: metadata.description,
+
+  ogTitle: metadata.title,
+  ogDescription: metadata.description,
+  ogSiteName: metadata.siteName,
+  ogImage: metadata.image,
+  ogUrl: metadata.url,
+
+  twitterTitle: metadata.title,
+  twitterDescription: metadata.description,
+  twitterImage: metadata.image,
+  twitterCard: 'summary'
 });
 
 const { pending, logIn, isLoggedIn, fetchUser } = useAccount();
