@@ -1,75 +1,39 @@
-# Nuxt 3 Minimal Starter
+# Plug13
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Что это?
+Данный проект объединяет [Buttplug.io](https://buttplug.io/) и [Space Station 13](https://spacestation13.com/). Он позволяет девайсам действовать вместе с персонажем в игре.
 
-## Setup
 
-Make sure to install the dependencies:
+Реализован с помощью [Nuxt 3](https://nuxt.com/), [Socket.IO](https://socket.io/) и [buttplug-js](https://github.com/buttplugio/buttplug-js).
 
+## А моя игрушка поддерживается?
+
+Сейчас поддерживаются только вибрация и поступательные движения.
+
+Список игрушек, которые умеют подключаться к buttplug.io можно найти на [IoST Index](https://iostindex.com/?filter0ButtplugSupport=4).
+На этом же сайте размещены и реферальные ссылки от разработчиков buttplug.io на покупку игрушек - отличный способ их поддержать.
+
+
+## Как запустить проект?
+
+Для разработки данного проекта используется [`pnpm`](https://pnpm.io/).
+
+### Установка:
 ```bash
-# npm
-npm install
-
-# pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+### Запуск сервера разработки:
 ```bash
-# npm
-npm run dev
-
-# pnpm
 pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
-
-Build the application for production:
-
+### Билд сайта в production режиме:
 ```bash
-# npm
-npm run build
-
-# pnpm
 pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
-Locally preview production build:
-
+### Предпросмотр сбилженного сайта:
 ```bash
-# npm
-npm run preview
-
-# pnpm
 pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
