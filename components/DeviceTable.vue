@@ -36,7 +36,7 @@ const emoteTypes = {
             @update:checked="(value) => setDeviceEnabled(device as ButtplugClientDevice, value)"
           />
         </TableCell>
-        <TableCell>{{ device.name }}</TableCell>
+        <TableCell>{{ device.displayName || device.name }}</TableCell>
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
