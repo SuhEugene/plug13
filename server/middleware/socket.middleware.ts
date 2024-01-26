@@ -45,10 +45,8 @@ export default defineEventHandler((event) => {
       if (!isThereUser) return socket.disconnect(true);
       socket.join(user.id);
       socket.emit("ready");
-      console.log("Ready emitted", socket.id)
 
       socket.on("get-connection", async () => {
-        console.log("Connection requested", socket.id)
         const connection = await prisma.connectionString.findFirst({
           where: {
             ownerId: user.id,
@@ -56,9 +54,17 @@ export default defineEventHandler((event) => {
             deleted: false
           }
         });
-        if (!connection) return;
+        if (!connection) return socket.emit("connection-string", null);;
+
         socket.join(connection.value);
-        socket.emit("connection-string", connection);
+        socket.emit("connection-string", { value: connection.value, createdAt: connection.createdAt });
+
+        // Если этот таймаут доживёт, то он кикнет как положено
+        // Если не доживёт - в любом случае строчка будет запрошена вновь
+        setTimeout(() => {
+          socket.connected && socket.leave(connection.value);
+          socket.emit("connection-string", null);
+        }, Date.now() - connection.createdAt.getTime());
       })
 
     })();
