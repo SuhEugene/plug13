@@ -64,7 +64,7 @@ export default defineEventHandler((event) => {
         setTimeout(() => {
           socket.connected && socket.leave(connection.value);
           socket.emit("connection-string", null);
-        }, Date.now() - connection.createdAt.getTime());
+        }, connection.createdAt.getTime() - Date.now() + TEN_HOURS );
       })
 
     })();
