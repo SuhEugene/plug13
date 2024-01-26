@@ -1,3 +1,5 @@
+import { allowedEmoteTypes } from "~/utils/buttplugConstants";
+
 const codeRegex = /^([A-Za-z0-9]{10}|([A-Za-z0-9]{5}-[A-Za-z0-9]{5}))$/;
 
 export default defineEventHandler(async (event) => {
