@@ -15,9 +15,6 @@ export const useButtplug = () => {
   });
   client.value.on('deviceadded', () => devices.value = client.value.devices);
   client.value.on('deviceremoved', () => devices.value = client.value.devices);
-
-  client.value.on('deviceadded', (...anything) => console.log('ondeviceadded', ...anything));
-  client.value.on('deviceremoved', (...anything) => console.log('ondeviceremoved', ...anything));
   client.value.on('scanningfinished', () => { isScanning.value = client.value.isScanning; });
 
 
