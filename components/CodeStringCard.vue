@@ -45,6 +45,8 @@ watch(pending, (newValue) => {
   meaninglessCrapInterval = setInterval(generateMeaninglessCrap, 50);
 });
 
+onUnmounted(() => clearTimeout(codeCopiedShownTimeout));
+
 
 const {
   isConnected: isSocketConnected,
@@ -52,20 +54,27 @@ const {
   disconnect: socketDisconnect,
   onConnection: onSocketConnection
 } = useSocket();
-const {
-  connected: isButtplugConnected,
-  devices: buttplugDevices
-} = useButtplug();
+const { registerEmote, sendInteractions } = useButtplugControl();
 onSocketConnection((socket) => {
   socket.on("ready", () => { socket.emit("get-connection"); });
   socket.on("connection-string", (data: ConnectionString) => { setConnectionString(data) });
   socket.on("update-connection", () => { socket.emit("get-connection"); });
+  socket.on("emote", (emoteData: { type: AllowedEmote, key: string }) => {
+    console.log("Got emoteData", emoteData);
+    if (!allowedEmoteTypes.includes(emoteData.type)) return;
+    registerEmote(emoteData.type);
+  });
 });
 
-onMounted(() => { socketConnect(); })
+let interactionLoop: ReturnType<typeof setInterval>;
+
+onMounted(() => {
+  socketConnect();
+  interactionLoop = setInterval(sendInteractions, 50);
+})
 
 onUnmounted(() => {
-  clearTimeout(codeCopiedShownTimeout);
+  clearInterval(interactionLoop);
   socketDisconnect();
 });
 

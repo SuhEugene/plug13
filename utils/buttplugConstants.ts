@@ -1,5 +1,5 @@
 export const allowedEmoteTypes = ['face', 'front', 'back', 'basic'] as const;
-export type AllowedEmoteTypes = (typeof allowedEmoteTypes)[number];
+export type AllowedEmote = (typeof allowedEmoteTypes)[number];
 
 export const allowedInteractionTypes = ['vibration', 'oscillation'] as const;
-export type AllowedInteractionTypes = (typeof allowedInteractionTypes)[number];
+export type AllowedInteraction = (typeof allowedInteractionTypes)[number];

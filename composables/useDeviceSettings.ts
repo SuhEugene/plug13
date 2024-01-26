@@ -1,9 +1,9 @@
 import type { ButtplugClientDevice } from "buttplug"
 
-type ActuatorSettings = { [Property in AllowedEmoteTypes]: boolean};
+type ActuatorSettings = { [Property in AllowedEmote]: boolean};
 
 type DeviceSettings = {
-  [Property in AllowedInteractionTypes]: ActuatorSettings[]
+  [Property in AllowedInteraction]: ActuatorSettings[]
 }
 type UsableDeviceSettings = { enabled: boolean } & Partial<DeviceSettings>;
 
@@ -54,7 +54,7 @@ export const useDeviceSettings = () => {
     localStorage.setItem('deviceSettings', JSON.stringify(deviceSettings.value));
   }
 
-  const createDeviceActuators = (obj: UsableDeviceSettings, type: AllowedInteractionTypes, amount: number) => {
+  const createDeviceActuators = (obj: UsableDeviceSettings, type: AllowedInteraction, amount: number) => {
     const arr: ActuatorSettings[] = [];
     for (let i = 0; i < amount; i++) {
       const emoteObj: Partial<ActuatorSettings> = {};
