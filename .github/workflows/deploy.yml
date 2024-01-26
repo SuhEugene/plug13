@@ -1,18 +1,50 @@
 name: Deploy
 
+concurrency:
+  group: deploy
+
 on:
   workflow_dispatch:
 
-
 jobs:
   deploy:
+    environment: Production
     runs-on: ubuntu-latest
     steps:
+      - uses: chrnorm/deployment-action@v2
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          environment: Production
+          environment-url: ${{ vars.ENVIRONMENT_URL }}
+          log-url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          ref: ${{ vars.BRANCH }}
+          production-environment: true
+          initial-status: "in_progress"
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           script: make redeploy
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: "${{ github.token }}"
+          environment-url: ${{ steps.deployment.outputs.environment_url }}
+          log-url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          state: "success"
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: "${{ github.token }}"
+          environment-url: ${{ steps.deployment.outputs.environment_url }}
+          log-url: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          state: "failure"
