@@ -2,7 +2,7 @@
 const metadata = {
   shortTitle: 'Plug13',
   title: 'Plug13 - SpaceStation13 + Buttplug.io',
-  description: 'Экспериментальная интеграция SpaceStation13 с buttplug.io в веб-приложении! Погрузитесь в увлекательный мир космических приключений намного глубже, позволив buttplug.io передавать приятные эмоции персонажа прямиком через игрушку!',
+  description: 'Погрузитесь в увлекательный мир SpaceStation13 намного глубже, позволив Buttplug.io передавать приятные эмоции персонажа прямиком через игрушку!',
   siteName: 'WetSkrell',
   image: '/favicon.png',
   url: 'https://plug13.wetskrell.ru',
