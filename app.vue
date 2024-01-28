@@ -41,6 +41,16 @@ onMounted(async () => {
     logIn(route.query.code as string);
 })
 
+
+const { public: { version } } = useRuntimeConfig();
+onMounted(() => {
+  console.log(
+    `%cPlug13 %c v${version}`,
+    'background-color:hsl(346.8 61% 49%);color:hsl(355.7 100% 97.3%);padding:2px 2px 2px 10px;font-weight:bold;border:1px solid hsl(240 3.7% 10.9%);border-radius:6px 0 0 6px;border-right:none;',
+    'background-color:hsl(240 3.7% 15.9%);color:hsl(0 0% 98%);padding:2px 10px 2px 2px;font-weight:bold;border:1px solid hsl(240 3.7% 10.9%);border-radius:0 6px 6px 0;border-left:none;'
+  );
+});
+
 </script>
 
 <template>

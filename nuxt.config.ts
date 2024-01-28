@@ -1,3 +1,5 @@
+import { version } from './package.json';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -12,6 +14,7 @@ export default defineNuxtConfig({
     byondSecret: 'very-secret',
     discordClientSecret: 'super-secret',
     public: {
+      version,
       discordClientId: '1197984072862007417',
       origin: 'http://localhost:3000'
     }
