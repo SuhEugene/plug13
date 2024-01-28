@@ -62,6 +62,8 @@ onMounted(() => {
     <ManagementPanel v-else />
     <a
       class="fixed bottom-0 left-0 p-2 border-t border-r rounded-tr-xl transition-colors hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+      target="_blank"
+      referrerpolicy="no-referrer"
       href="https://github.com/SuhEugene/plug13">
       <GithubLogoIcon class="w-4 h-4" />
     </a>
