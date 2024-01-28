@@ -53,20 +53,26 @@
 	emote_sends_failed = 0
 	username = null
 
-/datum/plug13_connection/proc/send_emote(emote)
+/datum/plug13_connection/proc/send_emote(emote, strength, duration)
 	if (!is_connected || !code) return
 	if (!owner) return
 
-	switch(emote)
-		if ("front", "back", "face", "basic")
-		else
-			CRASH("Tried to send invalid Plug13 emote")
+	if (!(emote in PLUG13_ALL_EMOTES))
+		CRASH("Plug13 error - Invalid emote type: \"[emote]\"")
+
+	if (!isnum(strength) || strength <= 0 || strength > 100)
+		CRASH("Plug13 error - Invalid emote strength: [strength]")
+
+	if (!isnum(duration) || duration <= 0 || duration > PLUG13_MAX_CLIENT_INTERACTION_DURATION)
+		CRASH("Plug13 error - Invalid emote duration: [duration]")
 
 	var/body = list(
 		"code" = code,
 		"secret" = CONFIG_GET(string/plug13_secret),
-		"key" = owner.key,
-		"emote" = emote
+		"emote" = emote,
+		"strength" = strength,
+		"duration" = duration,
+		"key" = owner.key
 	)
 
 	var/datum/http_request/request = new
@@ -77,7 +83,7 @@
 
 	var/datum/http_response/response = request.into_response()
 
-	if (response.errored || FLOOR(response.status_code/100) != 2) // 2xx codes
+	if (response.errored || FLOOR(response.status_code/100, 1) != 2) // 2xx codes
 		if (++emote_sends_failed > 10)
 			error = "Слишком много неудачных запросов"
 			disconnect()
