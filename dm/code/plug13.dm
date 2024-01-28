@@ -5,6 +5,7 @@
 	var/username
 	var/code
 	var/emote_sends_failed = 0
+	var/failed_code_tries = 0
 	var/client/owner
 
 /datum/plug13_connection/New(client/owner)
@@ -15,6 +16,10 @@
 /datum/plug13_connection/proc/connect()
 	if (is_connected || !code || pending) return
 	if (!owner) return
+
+	if (failed_code_tries > 30)
+		error = "Слишком ошибок ввода кода"
+		return
 
 	pending = TRUE
 	error = ""
@@ -42,6 +47,7 @@
 
 	if (data["error"])
 		error = data["error"]
+		failed_code_tries++
 		return
 
 	is_connected = TRUE
