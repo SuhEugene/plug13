@@ -47,22 +47,29 @@ watch(pending, (newValue) => {
 
 onUnmounted(() => clearTimeout(codeCopiedShownTimeout));
 
-
+interface EmoteData {
+  type: AllowedEmote
+  strength: number
+  duration: number
+  key: string
+}
 const {
   isConnected: isSocketConnected,
   connect: socketConnect,
   disconnect: socketDisconnect,
   onConnection: onSocketConnection
 } = useSocket();
-const { registerEmote, sendInteractions } = useButtplugControl();
+const { emoteEventArray, registerEmoteEvent, sendInteractions } = useButtplugControl();
 onSocketConnection((socket) => {
   socket.on("ready", () => { socket.emit("get-connection"); });
   socket.on("connection-string", (data: ConnectionString) => { setConnectionString(data) });
   socket.on("update-connection", () => { socket.emit("get-connection"); });
-  socket.on("emote", (emoteData: { type: AllowedEmote, key: string }) => {
-    console.log("Got emoteData", emoteData);
+  socket.on("emote", (emoteData: EmoteData) => {
     if (!allowedEmoteTypes.includes(emoteData.type)) return;
-    registerEmote(emoteData.type);
+    if (emoteData.strength <= 0 || emoteData.strength > 1) return;
+    if (emoteData.duration <= 0) return;
+
+    registerEmoteEvent(emoteData.type, emoteData.strength, emoteData.duration);
   });
 });
 

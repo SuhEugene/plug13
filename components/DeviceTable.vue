@@ -13,6 +13,7 @@ const attributeTypes = {
 const emoteTypes = {
   'front': 'Пах',
   'back': 'Зад',
+  'chest': 'Грудь',
   'face': 'Лицо',
   'basic': 'Обычный'
 } as const;

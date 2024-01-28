@@ -1,12 +1,11 @@
-type EmotesObject = { [Property in AllowedEmote]: number};
-type RecentEmotesObject = { [Property in AllowedEmote]: boolean};
+type RecentEmotesObject = { [Property in AllowedEmote]: number};
 
-const VIBRATION_LENGTH = 800;
-const STRENGTH: { [Property in AllowedEmote]: number} = {
-  face: 0.5,
-  back: 0.8,
-  front: 0.8,
-  basic: 0.2
+interface EmoteEvent {
+  id: number
+  type: AllowedEmote
+  strength: number
+  duration: number
+  timestamp: number
 }
 
 export const useButtplugControl = () => {
@@ -18,31 +17,36 @@ export const useButtplugControl = () => {
   type ActuatorSettingsArr = (typeof deviceSettings.value)[string][AllowedInteraction];
   type ActuatorSettings = Exclude<ActuatorSettingsArr, undefined>[number];
 
-  const emotesUsed = useState<EmotesObject>('emotes-used', () => {
-    let emotes: Partial<EmotesObject> = {};
-    for (const emote of allowedEmoteTypes)
-      emotes[emote] = 0;
-    return (emotes as EmotesObject);
-  });
+  const emoteEventArray = useState<EmoteEvent[]>('emote-event-array', () => []);
 
-  const getRecentEmotes = () => {
-    const emoteDates = emotesUsed.value;
+  const createRecentEmotesObject = () => {
     const recentEmotes: Partial<RecentEmotesObject> = {};
-    const now = Date.now();
-    for (const emoteType in emoteDates) {
-      const date = emoteDates[emoteType as AllowedEmote];
-      recentEmotes[emoteType as AllowedEmote] = (now - date) < VIBRATION_LENGTH;
-    }
+    for (const type of allowedEmoteTypes)
+      recentEmotes[type] = 0;
     return (recentEmotes as RecentEmotesObject);
+  }
+
+  const checkForRecentEmotes = () => {
+    const emoteEvents = emoteEventArray.value;
+    const recentEmotes = createRecentEmotesObject();
+    const now = Date.now();
+    for (const event of emoteEvents) {
+      if ((now - event.timestamp) > event.duration) {
+        console.log("Found event of timestamp diff", now - event.timestamp, "and dur", event.duration);
+        removeEmoteEvent(event.id);
+        continue;
+      }
+      recentEmotes[event.type] = Math.max(recentEmotes[event.type], event.strength);
+    }
+    return recentEmotes;
   }
 
   const findStrongestEmote = (settings: ActuatorSettings, recentEmotes: RecentEmotesObject) => {
     let max = 0;
     for (const emoteType of allowedEmoteTypes) {
       if (!settings[emoteType]) continue;
-      if (!recentEmotes[emoteType]) continue;
-      if (max > STRENGTH[emoteType]) continue;
-      max = STRENGTH[emoteType];
+      if (max > recentEmotes[emoteType]) continue;
+      max = recentEmotes[emoteType];
     }
     return max;
   }
@@ -60,14 +64,28 @@ export const useButtplugControl = () => {
     return todo;
   }
 
-
-  const registerEmote = (emoteType: AllowedEmote) => {
+  const registerEmoteEvent = (emoteType: AllowedEmote, strength: number, duration: number) => {
     if (!connected) return;
-    emotesUsed.value[emoteType] = Date.now();
+    if (strength <= 0 || strength > 1) return;
+    duration = clamp(duration, 100, 8000);
+    emoteEventArray.value.push({
+      id: Math.floor(Math.random() * 100000),
+      type: emoteType,
+      timestamp: Date.now(),
+      strength, duration
+    });
+    console.log("Pushed new emote to the loop", emoteEventArray.value);
+  }
+
+  const removeEmoteEvent = (eventId: number) => {
+    const eventIndex = emoteEventArray.value.findIndex(e => e.id === eventId);
+    if (eventIndex === -1) return;
+    emoteEventArray.value.splice(eventIndex, 1);
   }
 
   const sendInteractions = () => {
-    const recentEmotes = getRecentEmotes();
+    const recentEmotes = checkForRecentEmotes();
+    // console.log(recentEmotes);
     const currentDevices = devices.value;
     for (const device of currentDevices) {
       const settings = deviceSettings.value[device.name];
@@ -81,5 +99,9 @@ export const useButtplugControl = () => {
     }
   }
 
-  return { registerEmote, sendInteractions };
+  return {
+    emoteEventArray: readonly(emoteEventArray),
+    registerEmoteEvent,
+    sendInteractions
+  };
 }
