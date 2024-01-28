@@ -11,6 +11,7 @@ export const useButtplug = () => {
   client.value.on('disconnect', () => {
     connected.value = client.value.connected;
     isScanning.value = client.value.isScanning;
+    devices.value = [];
     error.value = new Error('Соединение с Intiface Central потеряно');
   });
   client.value.on('deviceadded', () => devices.value = client.value.devices);
