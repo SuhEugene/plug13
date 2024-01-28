@@ -10,15 +10,16 @@ export default defineEventHandler(async (event) => {
   const byondSecret = useRuntimeConfig().byondSecret;
   if (!body.secret || body.secret !== byondSecret) return { "error": "Неверный секрет билда. Пожалуйста, уведомьте об этом разработчика." }
 
-  const isThereConnection = await prisma.connectionString.count({
+  const userConnection = await prisma.connectionString.findFirst({
     where: {
       value: body.code.replace("-", "").toUpperCase(),
       createdAt: { gte: new Date(Date.now() - TEN_HOURS) },
-    }
+    },
+    select: { owner: { select: { username: true } }, value: true }
   });
-  if (!isThereConnection) return { "error": "Неверный код подключения!" };
+  if (!userConnection) return { "error": "Неверный код подключения!" };
 
-  console.log(`${body.key} connected to the key "${body.code}"`);
+  console.log(`${body.key} connected to the key ${userConnection.value} of user ${userConnection.owner.username}`);
 
-  return { "username": body.key };
+  return { "username": userConnection.owner.username };
 })
