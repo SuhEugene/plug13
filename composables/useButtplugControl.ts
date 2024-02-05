@@ -93,8 +93,8 @@ export const useButtplugControl = () => {
       for (const interactionType of allowedInteractionTypes) {
         const sendObj = getInteractionsArray(device, recentEmotes, interactionType);
         if (!sendObj) continue;
-        if (interactionType === "vibration") try { device.vibrate(sendObj); } catch (e) { console.error("Tried to vibrate but couldn't.\nSendObj is", sendObj); }
-        if (interactionType === "oscillation") try { device.oscillate(sendObj); } catch (e) { console.error("Tried to oscillate but couldn't.\nSendObj is", sendObj); }
+        if (interactionType === "vibration") device.vibrate(sendObj).catch(e => console.error("Tried 'vibration' interaction, but encountered an error:", e));
+        if (interactionType === "oscillation") device.oscillate(sendObj).catch(e => console.error("Tried 'oscillation' interaction, but encountered an error:", e));
       }
     }
   }
