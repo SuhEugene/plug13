@@ -92,7 +92,7 @@ export const useButtplugControl = () => {
       if (!settings || !settings.enabled) continue;
       for (const interactionType of allowedInteractionTypes) {
         const sendObj = getInteractionsArray(device, recentEmotes, interactionType);
-        if (!sendObj) continue;
+        if (!sendObj || !sendObj.length) continue;
         if (interactionType === "vibration")
           device
             .vibrate(sendObj)
