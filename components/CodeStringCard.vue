@@ -59,7 +59,7 @@ const {
   disconnect: socketDisconnect,
   onConnection: onSocketConnection
 } = useSocket();
-const { emoteEventArray, registerEmoteEvent, sendInteractions } = useButtplugControl();
+const { registerEmoteEvent, sendInteractions } = useButtplugControl();
 onSocketConnection((socket) => {
   socket.on("ready", () => { socket.emit("get-connection"); });
   socket.on("connection-string", (data: ConnectionString) => { setConnectionString(data) });
@@ -133,7 +133,7 @@ onUnmounted(() => {
         <Alert variant="danger" class="">
           <XCircle class="h-4 w-4" />
           <AlertTitle>Ошибка!</AlertTitle>
-          <AlertDescription>{{ error?.data?.message || error?.message || 'Lorem ipsum' }}</AlertDescription>
+          <AlertDescription>{{ error?.data?.message || error?.message || 'Неизвестная ошибка!' }}</AlertDescription>
         </Alert>
       </CardFooter>
     </Transition>
