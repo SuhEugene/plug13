@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { ButtplugClientDevice } from 'buttplug';
 
-const { devices } = useButtplug();
 const { getDeviceSettings, saveDeviceSettings } = useDeviceSettings();
 
 interface Props { device: ButtplugClientDevice }
@@ -55,7 +54,6 @@ const emoteTypes = {
         </div>
       </template>
     </template>
-    <!-- <Slider v-model="deviceSettings"/> -->
   </div>
 </template>
 

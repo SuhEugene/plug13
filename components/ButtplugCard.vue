@@ -77,7 +77,6 @@ onUnmounted(() => disconnect());
             </div>
           </Transition>
         </div>
-
       </Transition>
     </CardContent>
     <Transition name="fade-then-slide">
