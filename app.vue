@@ -56,7 +56,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container min-h-screen h-full px-6 flex flex-col justify-center items-center">
+  <div class="container min-h-screen h-full px-6 py-6 flex flex-col justify-center items-center">
     <LoadingCard v-if="pending" />
     <LogInCard v-else-if="!isLoggedIn" />
     <ManagementPanel v-else />
