@@ -7,11 +7,12 @@ const FIVE_MINUTES = 5 * 60 * 1000;
 
 export default defineEventHandler(async (event) => {
   const user = await useAuth(event);
+  const now = new Date().getTime();
 
   const connection = await prisma.connectionString.findFirst({
     where: {
       ownerId: user.id,
-      createdAt: { gte: new Date(Date.now() - TEN_HOURS) },
+      createdAt: { gte: new Date(now - TEN_HOURS) },
       deleted: false
     }
   });
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
   const closeToRequestConnection = await prisma.connectionString.count({
     where: {
       ownerId: user.id,
-      createdAt: { gte: new Date(Date.now() - FIVE_MINUTES) },
+      createdAt: { gte: new Date(now - FIVE_MINUTES) },
     }
   });
   if (closeToRequestConnection) throw createError({
