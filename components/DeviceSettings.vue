@@ -19,7 +19,8 @@ const emoteTypes = {
   'back': 'Зад',
   'chest': 'Грудь',
   'face': 'Лицо',
-  'basic': 'Обычный'
+  'basic': 'Обычный',
+  'masochism': 'Мазохизм'
 } as const;
 
 </script>
