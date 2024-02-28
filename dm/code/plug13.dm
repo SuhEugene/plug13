@@ -60,6 +60,8 @@
 	username = null
 
 /datum/plug13_connection/proc/send_emote(emote, strength, duration)
+	set waitfor = FALSE
+
 	if (!is_connected || !code) return
 	if (!owner) return
 
