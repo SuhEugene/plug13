@@ -81,6 +81,7 @@ html, body {
 body {
   min-height: 100%;
   min-height: 100vh;
+  color-scheme: dark;
 }
 ::selection {
   background-color: hsl(var(--primary));
