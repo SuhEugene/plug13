@@ -1,13 +1,17 @@
 import type { ButtplugClientDevice } from "buttplug"
 
-type ActuatorSettings = { [Property in AllowedEmote]: boolean};
+// number - число от 0 до 200, требует деления на 100
+type ActuatorSettings = { [Property in AllowedEmote]: number};
 
 type DeviceSettings = {
   [Property in AllowedInteraction]: ActuatorSettings[]
 }
-type UsableDeviceSettings = { enabled: boolean } & Partial<DeviceSettings>;
+type UsableDeviceSettings = {
+  enabled: boolean,
+  actuators: Partial<DeviceSettings>
+};
 
-type DeviceSeetingsRecord = Record<string, UsableDeviceSettings>;
+type DeviceSeetingsRecord = Record<number, UsableDeviceSettings>;
 
 export const useDeviceSettings = () => {
   const deviceSettings = useState<DeviceSeetingsRecord>('device-settings', () => ({}));
@@ -17,7 +21,7 @@ export const useDeviceSettings = () => {
     for (const actuator of arr) {
       const emoteObj: Partial<ActuatorSettings> = {};
       for (const emoteType of allowedEmoteTypes)
-        emoteObj[emoteType] = actuator[emoteType];
+        emoteObj[emoteType] = actuator[emoteType] ?? 0;
       out.push(emoteObj as ActuatorSettings);
     }
     if (out.length) return out;
@@ -26,24 +30,26 @@ export const useDeviceSettings = () => {
 
   const sanitizeDeviceSettings = (settings: DeviceSeetingsRecord) => {
     let newSettings: DeviceSeetingsRecord = {};
-    for (const deviceName in settings) {
-      const device = settings[deviceName];
+    for (const deviceId in settings) {
+      const device = settings[deviceId];
       if (device.enabled !== false && device.enabled !== true) continue;
-      newSettings[deviceName] = { enabled: device.enabled };
+      newSettings[deviceId] = { enabled: device.enabled, actuators: {} };
 
-
-      if (device.vibration instanceof Array)
-        newSettings[deviceName].vibration = sanitizeActuatorArray(device.vibration) || undefined;
-
-      if (device.oscillation instanceof Array)
-        newSettings[deviceName].oscillation = sanitizeActuatorArray(device.oscillation) || undefined;
+      const newActuators = newSettings[deviceId].actuators;
+      for (const interactionType of allowedInteractionTypes) {
+        const actuator = device.actuators[interactionType];
+        if (actuator instanceof Array)
+          newActuators[interactionType] = sanitizeActuatorArray(actuator) || undefined;
+      }
     }
     return newSettings;
   }
 
+  const tryDropOldSettings = () => localStorage.removeItem('deviceSettings');
+
   const loadDeviceSettings = () => {
-    const settingsString = localStorage.getItem('deviceSettings');
-    if (!settingsString) return;
+    const settingsString = localStorage.getItem('device-settings');
+    if (!settingsString) return tryDropOldSettings();
     try {
       const settingsJSON = JSON.parse(settingsString);
       deviceSettings.value = sanitizeDeviceSettings(settingsJSON);
@@ -51,48 +57,44 @@ export const useDeviceSettings = () => {
   }
 
   const saveDeviceSettings = () => {
-    localStorage.setItem('deviceSettings', JSON.stringify(deviceSettings.value));
+    localStorage.setItem('device-settings', JSON.stringify(deviceSettings.value));
   }
 
-  const createDeviceActuators = (obj: UsableDeviceSettings, type: AllowedInteraction, amount: number) => {
+  const createDeviceActuators = (deviceSettings: UsableDeviceSettings, type: AllowedInteraction, amount: number) => {
     const arr: ActuatorSettings[] = [];
     for (let i = 0; i < amount; i++) {
       const emoteObj: Partial<ActuatorSettings> = {};
       for (const emoteType of allowedEmoteTypes)
-        emoteObj[emoteType] = false;
+        emoteObj[emoteType] = 100;
       arr.push(emoteObj as ActuatorSettings);
     }
-    obj[type] = arr;
+    deviceSettings.actuators[type] = arr;
   }
 
   const createDevice = (device: ButtplugClientDevice) => {
-    deviceSettings.value[device.name] = { enabled: false };
-    if (device.vibrateAttributes) createDeviceActuators(deviceSettings.value[device.name], 'vibration', device.vibrateAttributes.length);
-    if (device.oscillateAttributes) createDeviceActuators(deviceSettings.value[device.name], 'oscillation', device.oscillateAttributes.length);
+    deviceSettings.value[device.index] = { enabled: false, actuators: {} };
+    if (device.vibrateAttributes) createDeviceActuators(deviceSettings.value[device.index], 'vibration', device.vibrateAttributes.length);
+    if (device.oscillateAttributes) createDeviceActuators(deviceSettings.value[device.index], 'oscillation', device.oscillateAttributes.length);
   }
 
   const setDeviceEnabled = (device: ButtplugClientDevice, value: boolean) => {
-    if (!deviceSettings.value[device.name]) createDevice(device);
-    deviceSettings.value[device.name].enabled = value;
+    if (!deviceSettings.value[device.index]) createDevice(device);
+    deviceSettings.value[device.index].enabled = value;
+    saveDeviceSettings();
   }
 
-  const toggleActuatorSetting = (device: ButtplugClientDevice, actuator: 'vibration' | 'oscillation', index: number, setting: keyof ActuatorSettings) => {
-    if (!deviceSettings.value[device.name]) createDevice(device);
-    if (!deviceSettings.value[device.name][actuator]) createDevice(device);
-    if (!deviceSettings.value[device.name][actuator]![index]) createDevice(device);
+  const isDeviceEnabled = (device: ButtplugClientDevice) => deviceSettings.value[device.index]?.enabled ?? false;
 
-    // Playful way to fuck with JS
-    const value = deviceSettings.value[device.name][actuator]![index];
-    value[setting] = !value[setting];
-
-    saveDeviceSettings();
+  const getDeviceSettings = (device: ButtplugClientDevice) => {
+    if (!deviceSettings.value[device.index]) createDevice(device);
+    return deviceSettings.value[device.index];
   }
 
   onMounted(() => loadDeviceSettings());
 
   return {
     deviceSettings: readonly(deviceSettings),
-    setDeviceEnabled,
-    toggleActuatorSetting
+    setDeviceEnabled, isDeviceEnabled,
+    getDeviceSettings, saveDeviceSettings
   }
 }

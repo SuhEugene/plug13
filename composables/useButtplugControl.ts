@@ -14,7 +14,7 @@ export const useButtplugControl = () => {
 
 
   type Device = (typeof devices.value)[number];
-  type ActuatorSettingsArr = (typeof deviceSettings.value)[string][AllowedInteraction];
+  type ActuatorSettingsArr = (typeof deviceSettings.value)[number]['actuators'][AllowedInteraction];
   type ActuatorSettings = Exclude<ActuatorSettingsArr, undefined>[number];
 
   const emoteEventArray = useState<EmoteEvent[]>('emote-event-array', () => []);
@@ -45,14 +45,19 @@ export const useButtplugControl = () => {
     let max = 0;
     for (const emoteType of allowedEmoteTypes) {
       if (!settings[emoteType]) continue;
-      if (max > recentEmotes[emoteType]) continue;
-      max = recentEmotes[emoteType];
+
+      // В настройках хранится число от 0 до 200 просто чтобы с мантиссой и
+      // её последствиями не приходилось дружиться
+      const emoteStrength = clamp((settings[emoteType] / 100) * recentEmotes[emoteType], 0, 1);
+      if (max > emoteStrength) continue;
+
+      max = emoteStrength;
     }
     return max;
   }
 
   const getInteractionsArray = (device: Device, recentEmotes: RecentEmotesObject, type: AllowedInteraction) => {
-    const settings = deviceSettings.value[device.name][type];
+    const settings = deviceSettings.value[device.index].actuators[type];
     if (!settings) return false;
 
     const todo: number[] = [];
@@ -85,10 +90,9 @@ export const useButtplugControl = () => {
 
   const sendInteractions = () => {
     const recentEmotes = checkForRecentEmotes();
-    // console.log(recentEmotes);
     const currentDevices = devices.value;
     for (const device of currentDevices) {
-      const settings = deviceSettings.value[device.name];
+      const settings = deviceSettings.value[device.index];
       if (!settings || !settings.enabled) continue;
       for (const interactionType of allowedInteractionTypes) {
         const sendObj = getInteractionsArray(device, recentEmotes, interactionType);

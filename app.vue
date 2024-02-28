@@ -99,4 +99,16 @@ input[type=number]::-webkit-outer-spin-button {
 { transition: opacity 0.13s ease-in-out, transform 0.13s ease-in-out;}
 .fade-then-slide-enter-from { opacity: 0; transform: translateY(0.5rem); }
 .fade-then-slide-leave-to { opacity: 0; transform: translateY(-0.5rem); }
+
+.fade-then-slide-left-enter-active,
+.fade-then-slide-left-leave-active
+{ transition: opacity 0.13s ease-in-out, transform 0.13s ease-in-out;}
+.fade-then-slide-left-enter-from { opacity: 0; transform: translateX(0.5rem); }
+.fade-then-slide-left-leave-to { opacity: 0; transform: translateX(-0.5rem); }
+
+.fade-then-slide-right-enter-active,
+.fade-then-slide-right-leave-active
+{ transition: opacity 0.13s ease-in-out, transform 0.13s ease-in-out;}
+.fade-then-slide-right-enter-from { opacity: 0; transform: translateX(-0.5rem); }
+.fade-then-slide-right-leave-to { opacity: 0; transform: translateX(0.5rem); }
 </style>
