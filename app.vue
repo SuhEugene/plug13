@@ -87,6 +87,12 @@ body {
   color: hsl(var(--primary-foreground));
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .fade-then-slide-enter-active,
 .fade-then-slide-leave-active
 { transition: opacity 0.13s ease-in-out, transform 0.13s ease-in-out;}
