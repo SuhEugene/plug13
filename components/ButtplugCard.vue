@@ -1,12 +1,15 @@
 <script lang="ts" setup>
-import { Loader2, Search, X, XCircle, Zap } from 'lucide-vue-next';
+import type { ButtplugClientDevice } from 'buttplug';
+import { ChevronLeft, Loader2, Search, XCircle, Zap } from 'lucide-vue-next';
 
 const {
-  client, error, devices,
+  error, devices,
   pending, connected, connect, disconnect,
   isScanning, startScanning, stopScanning
 } = useButtplug();
 const wsAddress = ref<string>();
+
+const selectedDevice = ref<ButtplugClientDevice | null>(null);
 
 onUnmounted(() => disconnect());
 </script>
@@ -14,10 +17,19 @@ onUnmounted(() => disconnect());
 <template>
   <Card class="flex flex-col">
     <CardHeader>
-      <CardTitle class="flex flex-row items-center">
-        <div class="flex-grow">Buttplug.io</div>
-        <ButtonDialogDisconnectButtplug v-if="connected" />
-      </CardTitle>
+      <Transition name="fade-then-slide" mode="out-in">
+        <CardTitle v-if="selectedDevice === null" class="flex flex-row items-center">
+            <div class="flex-grow">Buttplug.io</div>
+            <ButtonDialogDisconnectButtplug v-if="connected" />
+        </CardTitle>
+        <CardTitle v-else class="flex flex-row items-center">
+          <div class="flex-grow">{{ selectedDevice.displayName || selectedDevice.name }}</div>
+          <Button variant="outline" size="sm" @click="selectedDevice = null">
+              <ChevronLeft class="w-4 h-4 mr-2" />
+              <span>Назад</span>
+            </Button>
+        </CardTitle>
+      </Transition>
     </CardHeader>
     <CardContent class="h-full">
       <Transition name="fade-then-slide" mode="out-in">
@@ -47,17 +59,25 @@ onUnmounted(() => disconnect());
           </Button>
         </div>
         <div v-else>
-          <!-- <div v-for="device in devices" @click="device.vibrate(1);device.stop()" @dblclick="">{{ device.name }}</div> -->
-          <DeviceTable />
-          <Button v-if="!isScanning" class="block mx-auto mt-2" variant="secondary" size="sm" @click="startScanning()">
-            <Search class="w-4 h-4 mr-2 inline-block" />
-            <span>Сканировать</span>
-          </Button>
-          <Button v-else class="block mx-auto mt-2" variant="secondary" size="sm" @click="stopScanning()">
-              <Loader2 class="w-4 h-4 mr-2 inline-block animate-spin" />
-            <span>Завершить сканирование</span>
-          </Button>
+          <Transition :name="`fade-then-slide-${selectedDevice ? 'left' : 'right'}`" mode="out-in">
+            <DeviceSettings
+              v-if="selectedDevice !== null"
+              :device="(selectedDevice as ButtplugClientDevice)"
+            />
+            <div v-else>
+              <DeviceTable @settings="(device) => selectedDevice = device" />
+              <Button v-if="!isScanning" class="block mx-auto mt-2" variant="secondary" size="sm" @click="startScanning()">
+                <Search class="w-4 h-4 mr-2 inline-block" />
+                <span>Сканировать</span>
+              </Button>
+              <Button v-else class="block mx-auto mt-2" variant="secondary" size="sm" @click="stopScanning()">
+                  <Loader2 class="w-4 h-4 mr-2 inline-block animate-spin" />
+                <span>Завершить сканирование</span>
+              </Button>
+            </div>
+          </Transition>
         </div>
+
       </Transition>
     </CardContent>
     <Transition name="fade-then-slide">
