@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import logDated from "../utils/logger";
 const prisma = new PrismaClient();
 
 const TEN_HOURS = 10 * 60 * 60 * 1000;
@@ -14,6 +15,8 @@ export default defineEventHandler(async (event) => {
     },
     data: { deleted: true }
   });
+
+  logDated(`${user.username} deleted a new code`);
 
   return;
 })

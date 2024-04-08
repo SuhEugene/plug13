@@ -1,6 +1,7 @@
 
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
+import logDated from '../utils/logger';
 
 const prisma = new PrismaClient();
 
@@ -33,6 +34,8 @@ export default defineEventHandler(async (event) => {
     sameSite: true,
     secure: true
   });
+
+  logDated(`${user.username} logged in using Discord`);
 
   return { id: user.id, username: user.username };
 })

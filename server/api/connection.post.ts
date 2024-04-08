@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { RndStrAlphabet, randomString } from "~/utils/simpleFunctions";
+import logDated from "../utils/logger";
 const prisma = new PrismaClient();
 
 const TEN_HOURS = 10 * 60 * 60 * 1000;
@@ -33,6 +34,8 @@ export default defineEventHandler(async (event) => {
     select: { value: true, createdAt: true },
     data: { ownerId: user.id, value: randomString(RndStrAlphabet.useUpper | RndStrAlphabet.useNumbers, 10) }
   });
+
+  logDated(`${user.username} created a new code`);
 
   if(event.context.appSocket)
     event.context.appSocket.in(user.id).emit("update-connection");
