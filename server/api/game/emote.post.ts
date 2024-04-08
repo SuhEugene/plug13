@@ -39,8 +39,6 @@ export default defineEventHandler(async (event) => {
     message: "Strength is too low or too big"
   });
 
-  console.log(!body.duration, typeof body.duration, body.duration);
-
   if (!body.duration || typeof body.duration !== 'number') return createError({
     statusCode: 400,
     message: "Invalid duration"
