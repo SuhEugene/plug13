@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { Socket, Server } from 'socket.io';
 import { parse } from 'cookie-es';
 import jwt from 'jsonwebtoken';
+import logDated from '../utils/logger';
 
 const prisma = new PrismaClient();
 const TEN_HOURS = 10 * 60 * 60 * 1000;
@@ -15,7 +16,7 @@ export default defineEventHandler((event) => {
     event.context.appSocket = global.io;
     return;
   }
-  console.log('Initiating socket.middleware');
+  logDated('Initiating socket.middleware');
 
   const socket = event.node.res.socket as any;
   global.io = new Server(socket?.server);
@@ -38,7 +39,7 @@ export default defineEventHandler((event) => {
     const { token } = parse(socket.request.headers.cookie as string);
     const user = jwt.decode(token);
     if (!user || typeof user === "string") return socket.disconnect(true);
-    console.log("Client connected", socket.id);
+    logDated(`User ${user.id} connected as ${socket.id}`);
 
     (async () => {
       const isThereUser = await prisma.user.count({ where: { id: user.id, tokenVersion: user.tokenVersion } });
