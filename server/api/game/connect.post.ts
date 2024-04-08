@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import logDated from "~/server/utils/logger";
 const prisma = new PrismaClient();
 
 const TEN_HOURS = 10 * 60 * 60 * 1000;
@@ -19,7 +20,7 @@ export default defineEventHandler(async (event) => {
   });
   if (!userConnection) return { "error": "Неверный код подключения!" };
 
-  console.log(`${body.key} connected to the key ${userConnection.value} of user ${userConnection.owner.username}`);
+  logDated(`${body.key} connected to the key ${userConnection.value} of user ${userConnection.owner.username}`);
 
   return { "username": userConnection.owner.username };
 })
