@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     data: { deleted: true }
   });
 
-  logDated(`${user.username} deleted a new code`);
+  logDated(`${user.username} deleted connection code`);
 
   return;
 })
