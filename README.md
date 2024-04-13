@@ -41,13 +41,13 @@ Implemented using [Nuxt 3](https://nuxt.com/), [Socket.IO](https://socket.io/) a
 
 - You open the app and authorize (authorization is just for discord to handle bots, spam and stuff).
 - Connect to Intiface Central.
-- Find devices and configure them.
+- Find devices and configure them.  
   App allows you to set modifier for every type of interaction with your character:
   - `Face` for kisses and oral *things*, `chest` for breasts and chest... `crotch` for crotch and `back` for ass.
   - `Basic` is for hugs, headpats, etc.
   - `Masochism` for Security department players.
 - Generate and copy code `XXXXX-XXXXX`.
-- Open the game and enter/paste this code in the special menu.
+- Open the game and enter/paste this code in the special menu.  
   *`OOC` -> `Plug13` by default.*
 - Enjoy your game.
 
@@ -61,7 +61,7 @@ And also when everything is already set up, you need just to connect Intiface an
 
 Currently only vibration and oscillation are supported.
 
-A list of devices that can connect to buttplug.io can be found on [IoST Index](https://iostindex.com/?filter0ButtplugSupport=4).
+A list of devices that can connect to buttplug.io can be found on [IoST Index](https://iostindex.com/?filter0ButtplugSupport=4).  
 The same site also contains referral links from the developers of buttplug.io for the purchase of devices - a great way to support them.
 
 ## Service internals
@@ -85,7 +85,7 @@ By steps:
 
 Yes. I know. But.
 
-BYOND engine is so old... It doesn't allow you to use WS on the client side natively.
+BYOND engine is so old... It doesn't allow you to use WS on the client side natively.  
 Yeah.
 
 In theory I could use hidden IE11 browser window in game interface, but it would be a way bigger pain in my back to implement that, than this web-service.
