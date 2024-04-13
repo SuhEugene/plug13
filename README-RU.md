@@ -1,14 +1,14 @@
-<div align="center">
-
-# Plug13
-
-</div>
-
 <table>
 <tr><td align="center" width="2000"><b>
 <a href="README.md">Go to English README version</a>
 </b></td></tr>
 </table>
+
+<div align="center">
+
+# Plug13
+
+</div>
 
 Этот проект - интеграция [Space Station 13](https://spacestation13.com/) и [Buttplug.io](https://buttplug.io/) через сервис.
 
