@@ -69,8 +69,8 @@ The same site also contains referral links from the developers of buttplug.io fo
 So, Space Station 13 is a game that has roleplay servers. Every server runs their own code.
 
 This project has two parts:
-- Plug13 service, that acts like a bridge between Intiface Central and the game
-- Module for SS13 servers that allows SS13 server and Plug13 service communicate
+- Plug13 service, that acts like a bridge between Intiface Central and the game.
+- Module for SS13 servers that allows SS13 server and Plug13 service communicate.
 
 By steps:
 - On server procedure `plug13.send_emote(type, strength, duration)` is called
