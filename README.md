@@ -4,7 +4,8 @@ This is [Space Station 13](https://spacestation13.com/) and [Buttplug.io](https:
 
 Implemented using [Nuxt 3](https://nuxt.com/), [Socket.IO](https://socket.io/) and [buttplug-js](https://github.com/buttplugio/buttplug-js).
 
-<details>
+<table>
+<tr><td><details>
 <summary>List of contents</summary>
 
 - [Space Station 13 - Short Wiki summary](#space-station-13---short-wiki-summary)
@@ -13,7 +14,8 @@ Implemented using [Nuxt 3](https://nuxt.com/), [Socket.IO](https://socket.io/) a
 - [Service internals](#service-internals)
 - [How to run this project](#how-to-run-this-project)
 
-</details>
+</details></td></tr>
+</table>
 
 ## Space Station 13 - Short Wiki summary
 
