@@ -25,12 +25,12 @@ useSeoMeta({
   ogTitle: metadata.title,
   ogDescription: metadata.description,
   ogSiteName: metadata.siteName,
-  ogImage: metadata.image,
+  ogImage: `${metadata.url}${metadata.image}`,
   ogUrl: metadata.url,
 
   twitterTitle: metadata.title,
   twitterDescription: metadata.description,
-  twitterImage: metadata.image,
+  twitterImage: `${metadata.url}${metadata.image}`,
   twitterCard: 'summary'
 });
 
