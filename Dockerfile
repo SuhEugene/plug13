@@ -26,4 +26,4 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 FROM deps AS deploy
 COPY --from=build /app/.output ./
 
-CMD node ./server/index.mjs
+CMD pnpm prisma migrate deploy && node ./server/index.mjs
