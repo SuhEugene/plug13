@@ -10,6 +10,10 @@ COPY ./prisma ./prisma
 COPY ./package.json ./pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
+# Needs to be installed manually
+# https://github.com/radix-vue/shadcn-vue/issues/293
+RUN pnpm install -D oxc-parser
+
 FROM devdeps AS build
 COPY . .
 RUN pnpm build
