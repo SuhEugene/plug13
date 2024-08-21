@@ -6,6 +6,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 FROM base AS devdeps
+COPY ./prisma ./prisma
 COPY ./package.json ./pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
@@ -13,6 +14,7 @@ FROM devdeps AS build
 RUN pnpm build
 
 FROM base AS deps
+COPY ./prisma ./prisma
 COPY ./package.json ./pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --production
 
