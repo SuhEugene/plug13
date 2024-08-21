@@ -11,6 +11,7 @@ COPY ./package.json ./pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM devdeps AS build
+COPY . .
 RUN pnpm build
 
 FROM base AS deps
