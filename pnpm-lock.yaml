@@ -35,6 +35,9 @@ importers:
       nuxt:
         specifier: ^3.12.4
         version: 3.12.4(@parcel/watcher@2.4.1)(@types/node@22.5.0)(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.21.0)(sass@1.77.8)(terser@5.31.6)(typescript@5.5.4)(vite@5.4.2(@types/node@22.5.0)(sass@1.77.8)(terser@5.31.6))
+      prisma:
+        specifier: ^5.18.0
+        version: 5.18.0
       radix-vue:
         specifier: ^1.9.4
         version: 1.9.4(vue@3.4.38(typescript@5.5.4))
@@ -63,9 +66,6 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^9.0.6
         version: 9.0.6
-      prisma:
-        specifier: ^5.18.0
-        version: 5.18.0
       shadcn-nuxt:
         specifier: ^0.8.7
         version: 0.8.7(magicast@0.3.4)(rollup@4.21.0)

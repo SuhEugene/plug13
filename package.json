@@ -13,7 +13,6 @@
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@types/jsonwebtoken": "^9.0.6",
-    "prisma": "^5.18.0",
     "shadcn-nuxt": "^0.8.7",
     "typescript": "^5.5.4"
   },
@@ -27,6 +26,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-vue-next": "^0.312.0",
     "nuxt": "^3.12.4",
+    "prisma": "^5.18.0",
     "radix-vue": "^1.9.4",
     "sass": "^1.77.8",
     "socket.io": "^4.7.5",
