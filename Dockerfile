@@ -12,9 +12,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 FROM devdeps AS build
 RUN pnpm build
 
-FROM node:20-alpine AS deps
-WORKDIR /app
-
+FROM base AS deps
 COPY ./package.json ./pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --production
 
