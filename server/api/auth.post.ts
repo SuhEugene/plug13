@@ -32,7 +32,8 @@ export default defineEventHandler(async (event) => {
   const token = jwt.sign(user, jwtSecret);
   setCookie(event, 'token', token, {
     sameSite: true,
-    secure: true
+    secure: true,
+    httpOnly: true
   });
 
   logDated(`${user.username} logged in using Discord`);
