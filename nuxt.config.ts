@@ -2,6 +2,7 @@ import { version } from './package.json';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  compatibilityDate: '2023-12-19',
   devtools: { enabled: true },
   css: ['~/assets/css/global.scss'],
   modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt'],

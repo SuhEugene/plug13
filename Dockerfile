@@ -1,9 +1,12 @@
-FROM node:20-alpine AS base
+FROM node:20.15-bookworm-slim AS base
 WORKDIR /app
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
+
+# For whatever reason it needs to be installed manually
+RUN apt-get update -y && apt-get install -y openssl
 
 FROM base AS devdeps
 COPY ./prisma ./prisma
@@ -26,4 +29,4 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 FROM deps AS deploy
 COPY --from=build /app/.output ./
 
-CMD pnpm prisma migrate deploy && node ./server/index.mjs
+CMD ["sh", "-c", "pnpm prisma migrate deploy && node ./server/index.mjs"]

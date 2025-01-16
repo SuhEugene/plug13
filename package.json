@@ -11,29 +11,29 @@
     "postinstall": "nuxt prepare; prisma generate"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.12.1",
-    "@types/jsonwebtoken": "^9.0.6",
+    "@nuxtjs/tailwindcss": "^6.13.1",
+    "@types/jsonwebtoken": "^9.0.7",
     "shadcn-nuxt": "^0.8.7",
-    "typescript": "^5.5.4",
-    "vue-router": "^4.4.3"
+    "typescript": "^5.7.3",
+    "vue-router": "^4.5.0"
   },
   "dependencies": {
-    "@prisma/client": "^5.18.0",
+    "@prisma/client": "^5.22.0",
     "@radix-icons/vue": "^1.0.0",
     "@vueuse/core": "^10.11.1",
     "buttplug": "^3.2.2",
-    "class-variance-authority": "^0.7.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-vue-next": "^0.312.0",
-    "nuxt": "^3.12.4",
-    "prisma": "^5.18.0",
-    "radix-vue": "^1.9.4",
-    "sass": "^1.77.8",
-    "socket.io": "^4.7.5",
-    "socket.io-client": "^4.7.5",
-    "tailwind-merge": "^2.5.2",
+    "nuxt": "^3.15.2",
+    "prisma": "^5.22.0",
+    "radix-vue": "^1.9.12",
+    "sass": "^1.83.4",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "vue": "^3.4.38"
+    "vue": "^3.5.13"
   }
 }
