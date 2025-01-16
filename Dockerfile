@@ -5,6 +5,9 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
+# For whatever reason it needs to be installed manually
+RUN apk add openssl openssl-dev
+
 FROM base AS devdeps
 COPY ./prisma ./prisma
 COPY ./package.json ./pnpm-lock.yaml ./
