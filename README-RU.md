@@ -23,6 +23,11 @@
 - [А моё устройство поддерживается?](#какие-игрушки-устройства-поддерживаются)
 - [Проект изнутри](#проект-изнутри)
 - [Как запустить проект](#как-запустить-проект)
+  - [DM сервер - Byond](#dm-сервер---byond)
+  - [Web - Короткое объяснение](#web---короткое-объяснение)
+  - [Web - Длинное объяснение](#web---длинное-объяснение)
+    - [Запуск в Docker](#запуск-в-docker)
+    - [Нативный запуск](#нативный-запуск)
 
 </details></td></tr>
 </table>
@@ -92,18 +97,119 @@
 
 ## Как запустить проект
 
+### DM сервер - Byond
+
+Читать тут: [Plug13 DM - ReadMe](dm/README-RU.md)
+
+### Web - Короткое объяснение
+
 Проект использует [`pnpm`](https://pnpm.io/).
 
 ```bash
-# Установить модули:
+# Для установки модулей запустите:
 pnpm install
 
 # Запустить сервер разработки:
 pnpm run dev
 
-# Собрать проект в production режиме:
+# Билд проекта для прода:
 pnpm run build
+pnpm run prisma migrate deploy
 
-# Запустить предпросмотр production сборки:
+# Превью продовой сборки:
 pnpm run preview
+
+# Запуск продовой сборки:
+node ./server/index.mjs
 ```
+
+### Web - Длинное объяснение
+
+#### Запуск в Docker
+
+1. Установи [Docker](https://docs.docker.com/engine/install/)
+2. Клонируй репозиторий:
+```bash
+git clone https://github.com/SuhEugene/plug13.git
+cd plug13
+```
+
+3. Настрой переменные окружения:
+
+Скопируй переменные из `.env.example` в `.env`
+```bash
+cp .env.example .env
+```
+
+Затем измени как тебе необходимо  
+Тебе придётся предоставить свою собственную базу данных PostgreSQL
+
+4. Сбилди docker image:
+```bash
+docker build -t plug13 .
+```
+
+5. Запусти docker image:
+```bash
+docker run -d -p 3000:3000 plug13
+```
+
+Сервер будет доступен по адресу `http://localhost:3000`
+
+#### Нативный запуск
+
+1. Установи [Node.js](https://nodejs.org/en/download/) и [pnpm](https://pnpm.io/)
+
+Короткое субъективное руководство:
+```bash
+curl -fsSL https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install | bash -s 20
+corepack enable pnpm
+```
+
+2. Склонируй репозиторий:
+```bash
+git clone https://github.com/SuhEugene/plug13.git
+cd plug13
+```
+
+3. Установи модули:
+```bash
+pnpm install --frozen-lockfile
+```
+
+4. Настрой переменные окружения:
+
+Скопируй переменные из `.env.example` в `.env`
+```bash
+cp .env.example .env
+```
+
+Затем измени как тебе необходимо  
+Тебе придётся предоставить свою собственную базу данных PostgreSQL
+
+5. Выполни миграцию базы данных:
+```bash
+pnpm prisma migrate deploy
+```
+
+6. Запусти сервер
+
+Сервер разработки: `pnpm dev`
+
+Продовый сервер:
+- `pnpm build`
+- `node ./server/index.mjs`
+
+Сервер будет доступен по адресу `http://localhost:3000`
+
+---
+
+Если встретишь такую ошибку:
+```
+ERROR Error while requiring module shadcn-nuxt: Error: Cannot find module '@oxc-parser/binding-linux-x64-musl'
+```
+тогда тебе нужно будет вручную установить `oxc-parser`:
+```
+pnpm install -D oxc-parser
+```
+и затем пересобрать проект

@@ -23,6 +23,11 @@ Implemented using [Nuxt 3](https://nuxt.com/), [Socket.IO](https://socket.io/) a
 - [Is my device supported?](#what-toys-devices-are-supported)
 - [Service internals](#service-internals)
 - [How to run this project](#how-to-run-this-project)
+  - [DM server - Byond](#dm-server---byond)
+  - [Web - Short explanation](#web---short-explanation)
+  - [Web - Detailed explanation](#web---detailed-explanation)
+    - [Run in Docker](#run-in-docker)
+    - [Run natively](#run-natively)
 
 </details></td></tr>
 </table>
@@ -92,6 +97,12 @@ In theory I could use hidden IE11 browser window in game interface, but it would
 
 ## How to run this project
 
+### DM server - Byond
+
+Read here: [Plug13 DM - ReadMe](dm/README.md)
+
+### Web - Short explanation
+
 This project uses [`pnpm`](https://pnpm.io/).
 
 ```bash
@@ -103,7 +114,102 @@ pnpm run dev
 
 # To build project in production mode:
 pnpm run build
+pnpm run prisma migrate deploy
 
 # To preview production-built project:
 pnpm run preview
+
+# To run production-built project:
+node ./server/index.mjs
 ```
+
+### Web - Detailed explanation
+
+#### Run in Docker
+
+1. Install [Docker](https://docs.docker.com/engine/install/)
+2. Clone this repo:
+```bash
+git clone https://github.com/SuhEugene/plug13.git
+cd plug13
+```
+
+3. Configure environment variables:
+
+Copy variables from `.env.example` to `.env`
+```bash
+cp .env.example .env
+```
+
+Then change them to your needs  
+You have to provide your own PostgreSQL database
+
+4. Build the image:
+```bash
+docker build -t plug13 .
+```
+
+5. Run the image:
+```bash
+docker run -d -p 3000:3000 plug13
+```
+
+Server will be available on `http://localhost:3000`
+
+#### Run natively
+
+1. Install [Node.js](https://nodejs.org/en/download/) and [pnpm](https://pnpm.io/)
+
+Short opinionated guide:
+```bash
+curl -fsSL https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install | bash -s 20
+corepack enable pnpm
+```
+
+2. Clone this repo:
+```bash
+git clone https://github.com/SuhEugene/plug13.git
+cd plug13
+```
+
+3. Install modules:
+```bash
+pnpm install --frozen-lockfile
+```
+
+4. Configure environment variables:
+
+Copy variables from `.env.example` to `.env`
+```bash
+cp .env.example .env
+```
+
+Then change them to your needs  
+You have to provide your own PostgreSQL database
+
+5. Migrate database:
+```bash
+pnpm prisma migrate deploy
+```
+
+6. Start the server
+
+Development server: `pnpm dev`
+
+Production server:
+- `pnpm build`
+- `node ./server/index.mjs`
+
+Server will be available on `http://localhost:3000`
+
+---
+
+If you encounter an error like
+```
+ERROR Error while requiring module shadcn-nuxt: Error: Cannot find module '@oxc-parser/binding-linux-x64-musl'
+```
+then you need to install `oxc-parser` manually:
+```
+pnpm install -D oxc-parser
+```
+and then rebuild the project
